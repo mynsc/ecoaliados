@@ -1,0 +1,73 @@
+// Mocks iniciales para misiones (v0). Usar solo en fallback si localStorage está vacío.
+import type { Mission } from './missions.types';
+
+const now = new Date().toISOString();
+
+export const mockMissions: Mission[] = [
+  {
+    id: 'm-001',
+    type: 'count',
+    title: 'Colecciona chapitas para Pandito',
+    description: 'Recolecta 10 chapitas para salvar a Pandito.',
+    targetCount: 10,
+    currentCount: 4,
+    reports: [
+      { id: 'r-001', added: 2, timestamp: now, note: 'Inicio' },
+      { id: 'r-002', added: 2, timestamp: now, note: 'Segunda' },
+    ],
+    active: true,
+    completed: false,
+    createdAt: now,
+    updatedAt: now,
+    lastReportedAt: now,
+    reward: { id: 'rw-1', type: 'badge', title: 'Pandito Friend', description: 'Sticker exclusivo', value: 0, claimed: false },
+    metadata: { icon: '🧸', dailyLimit: 5, priority: 1 },
+  },
+  {
+    id: 'm-002',
+    type: 'count',
+    title: 'Botellas de plástico',
+    description: 'Entrega 20 botellas recicladas.',
+    targetCount: 20,
+    currentCount: 7,
+    reports: [],
+    active: true,
+    completed: false,
+    createdAt: now,
+    updatedAt: now,
+    reward: { id: 'rw-2', type: 'points', title: 'Puntos Verde', value: 50, claimed: false },
+    metadata: { icon: '♻️', dailyLimit: 10, priority: 2 },
+  },
+  {
+    id: 'm-003',
+    type: 'count',
+    title: 'Visita el punto limpio local',
+    description: 'Registra 1 visita al punto limpio.',
+    targetCount: 1,
+    currentCount: 0,
+    reports: [],
+    active: true,
+    completed: false,
+    createdAt: now,
+    updatedAt: now,
+    reward: { id: 'rw-3', type: 'discount', title: '10% en tienda', value: 10, claimed: false },
+    metadata: { icon: '📍', dailyLimit: 1, priority: 3 },
+  },
+  {
+    id: 'm-004',
+    type: 'count',
+    title: 'Reusa bolsas de tela',
+    description: 'Usa tu bolsa de tela 15 veces.',
+    targetCount: 15,
+    currentCount: 12,
+    reports: [],
+    active: true,
+    completed: false,
+    createdAt: now,
+    updatedAt: now,
+    reward: { id: 'rw-4', type: 'item', title: 'Sticker ecológico', value: 0, claimed: false },
+    metadata: { icon: '🛍️', dailyLimit: 3, priority: 4 },
+  },
+];
+
+export default mockMissions;

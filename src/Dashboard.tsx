@@ -3,7 +3,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import { Star, Gift, Users, Trophy, User, Home, TreePine, Award } from 'lucide-react';
+import { Gift, Users, Trophy, User, Home, TreePine, Award } from 'lucide-react';
+import Missions from './missions/Missions';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('home');
@@ -71,70 +72,7 @@ export default function App() {
         );
 
       case 'missions':
-        return (
-          <div className="space-y-6">
-            {/* --- Misión Principal --- */}
-            <Card className="shadow-lg transition-all hover:shadow-md">
-              <CardContent className="p-6 flex flex-col items-center space-y-4">
-                <div className="relative">
-                  <img 
-                    src="https://placehold.co/100x100/A3E635/000?text=M" 
-                    alt="Misión Pandito - Recoge chapitas para salvar al oso" 
-                    className="rounded-full border-4 border-lime-400 p-1" 
-                  />
-                  <span className="absolute bottom-0 right-0 text-xl animate-pulse" role="img" aria-label="Efecto de brillo">✨</span>
-                </div>
-                <div className="text-center">
-                  <h2 className="text-2xl font-bold text-gray-800">¡Hola, EcoGuardián!</h2>
-                  <p className="text-md text-gray-600 mt-1">¡Salva a Pandito del basural! <span role="img" aria-label="Botella de jugo">🧃</span></p>
-                </div>
-                <Progress 
-                  value={40} 
-                  className="w-full bg-gray-200 h-2.5 rounded-full" 
-                />
-                <div className="text-sm text-gray-500 font-medium flex items-center gap-1">
-                  <Star className="h-4 w-4 text-yellow-500" /> 
-                  Misión activa: <span className="font-bold">4 de 10 chapitas</span>
-                </div>
-                <Button 
-                  className="w-full mt-4 bg-yellow-500 hover:bg-yellow-600 text-white shadow-md transition-colors"
-                  aria-label="Reportar chapitas recolectadas"
-                >
-                  Reportar chapitas
-                </Button>
-              </CardContent>
-            </Card>
-
-            {/* --- Logros --- */}
-            <Card className="shadow-lg transition-all hover:shadow-md">
-              <CardContent className="p-6 space-y-4">
-                <h3 className="text-xl font-bold text-gray-800 flex items-center gap-2">
-                  <Trophy className="h-6 w-6 text-orange-500" /> Mis Logros
-                </h3>
-                <div className="grid grid-cols-3 gap-4">
-                  <Badge className="bg-lime-100 text-lime-900 font-bold py-2 px-3 text-center border border-lime-200">
-                    Chapita #1
-                  </Badge>
-                  <Badge className="bg-yellow-100 text-yellow-900 font-bold py-2 px-3 text-center border border-yellow-200">
-                    Pandito feliz
-                  </Badge>
-                  <Badge className="bg-blue-100 text-blue-900 font-bold py-2 px-3 text-center border border-blue-200">
-                    EcoHéroe
-                  </Badge>
-                  <Badge variant="outline" className="py-2 px-3 text-center text-gray-400 border-dashed border-gray-300 col-span-3">
-                    + Nuevo logro próximo
-                  </Badge>
-                </div>
-                <Button 
-                  className="w-full mt-4 bg-orange-500 hover:bg-orange-600 text-white shadow-md transition-colors"
-                  aria-label="Ver colección completa"
-                >
-                  Ver mi colección
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
-        );
+        return <Missions/>;
 
       case 'leaderboard':
         return (

@@ -2,7 +2,7 @@
 export type MissionId = string;
 
 // Tipos de misión básicos
-export type MissionType = 'count' | 'boolean' | 'visit';
+export type MissionType = 'count' | 'visit';
 
 // Evento de reporte (historial). Guardar últimos N=100 eventos por misión.
 export interface ReportEvent {

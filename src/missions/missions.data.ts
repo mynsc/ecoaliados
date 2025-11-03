@@ -68,6 +68,25 @@ export const mockMissions: Mission[] = [
     reward: { id: 'rw-4', type: 'item', title: 'Sticker ecológico', value: 0, claimed: false },
     metadata: { icon: '🛍️', dailyLimit: 3, priority: 4 },
   },
+ 
+  {
+    id: 'm-005',
+    type: 'visit',
+    title: 'Planta un árbol en comunidad',
+    description: 'Participa en una jornada y registra tu plantación.',
+    targetCount: 1,
+    currentCount: 0,
+    reports: [
+      { id: 'r-100', added: 1, timestamp: now, note: 'Evento inicial' },
+    ],
+    active: true,
+    completed: false,
+    createdAt: now,
+    updatedAt: now,
+    lastReportedAt: now,
+    reward: { id: 'rw-5', type: 'badge', title: 'Plantador', description: 'Badge por plantar un árbol', value: 0, claimed: false },
+    metadata: { icon: '🌳', dailyLimit: 1, priority: 5 },
+  },
 ];
 
 export default mockMissions;

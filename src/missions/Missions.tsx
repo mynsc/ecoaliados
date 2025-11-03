@@ -32,7 +32,7 @@ function saveMissionsToStorage(missions: Mission[]) {
 
 export default function Missions() {
   const [missions, setMissions] = useState<Mission[]>(() => loadMissionsFromStorage() ?? mockMissions);
-  const [openId, setOpenId] = useState<string | null>(null);
+  const [selectedMissionId, setSelectedMissionId] = useState<string | null>(null);
   const [inputCount, setInputCount] = useState<number>(1);
   const [note, setNote] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
@@ -45,14 +45,14 @@ export default function Missions() {
     setError(null);
     setInputCount(1);
     setNote('');
-    setOpenId(id);
+    setSelectedMissionId(id);
   };
 
-  const closeModal = () => setOpenId(null);
+  const closeModal = () => setSelectedMissionId(null);
 
   const submitReport = () => {
-    if (!openId) return;
-    const mission = missions.find((m) => m.id === openId);
+    if (!selectedMissionId) return;
+    const mission = missions.find((m) => m.id === selectedMissionId);
     if (!mission) {
       setError('Misión no encontrada.');
       return;
@@ -62,7 +62,7 @@ export default function Missions() {
       setError(result.message);
       return;
     }
-    const updated = missions.map((m) => (m.id === openId ? (result.mission as Mission) : m));
+    const updated = missions.map((m) => (m.id === selectedMissionId ? (result.mission as Mission) : m));
     setMissions(updated);
     closeModal();
   };
@@ -71,7 +71,7 @@ export default function Missions() {
 
   return (
     <div className="space-y-4">
-      {/* Tarjeta principal (migrada desde Dashboard) */}
+      {/* Tarjeta principal*/}
       {mainMission && (
         <Card className="shadow-lg transition-all hover:shadow-md">
           <CardContent className="p-6 flex flex-col items-center space-y-4">
@@ -107,7 +107,7 @@ export default function Missions() {
         </Card>
       )}
 
-      {/* Logros (migrado desde Dashboard) */}
+      {/* Logros*/}
       <Card className="shadow-lg transition-all hover:shadow-md">
         <CardContent className="p-6 space-y-4">
           <h3 className="text-xl font-bold text-gray-800 flex items-center gap-2">
@@ -183,8 +183,8 @@ export default function Missions() {
       })}
 
       {/* Modal simple */}
-      {openId && (() => {
-        const mission = missions.find((x) => x.id === openId)!;
+      {selectedMissionId && (() => {
+        const mission = missions.find((x) => x.id === selectedMissionId)!;
         const todaySum = getTodaySum(mission);
         const remaining = Math.max(0, mission.targetCount - mission.currentCount);
         return (

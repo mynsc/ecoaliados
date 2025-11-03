@@ -71,7 +71,7 @@ export default function Missions() {
 
   return (
     <div className="space-y-4">
-      {/* Tarjeta principal (migrada desde Dashboard) */}
+      {/* Tarjeta principal*/}
       {mainMission && (
         <Card className="shadow-lg transition-all hover:shadow-md">
           <CardContent className="p-6 flex flex-col items-center space-y-4">
@@ -107,7 +107,7 @@ export default function Missions() {
         </Card>
       )}
 
-      {/* Logros (migrado desde Dashboard) */}
+      {/* Logros*/}
       <Card className="shadow-lg transition-all hover:shadow-md">
         <CardContent className="p-6 space-y-4">
           <h3 className="text-xl font-bold text-gray-800 flex items-center gap-2">

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import type { Mission } from './missions.types';
-import { reportItems, pushReport, getTodaySum, isCompleted } from './missions.utils';
+import { reportItems, pushReport, getTodaySum, isCompleted, getProgressPercentage, sortMissionsByPriority } from './missions.utils';
 
 describe('reportItems', () => {
   const baseMission: Mission = {
@@ -206,5 +206,195 @@ describe('isCompleted', () => {
     };
     
     expect(isCompleted(mission)).toBe(false);
+  });
+});
+
+describe('getProgressPercentage', () => {
+  it('debe retornar 50% cuando está a la mitad', () => {
+    const mission: Mission = {
+      id: 'test-1',
+      type: 'count',
+      title: 'Test',
+      description: 'Test',
+      targetCount: 10,
+      currentCount: 5,
+      active: true,
+      completed: false,
+      createdAt: new Date().toISOString(),
+    };
+    
+    expect(getProgressPercentage(mission)).toBe(50);
+  });
+
+  it('debe retornar 100% cuando está completa', () => {
+    const mission: Mission = {
+      id: 'test-1',
+      type: 'count',
+      title: 'Test',
+      description: 'Test',
+      targetCount: 10,
+      currentCount: 10,
+      active: true,
+      completed: true,
+      createdAt: new Date().toISOString(),
+    };
+    
+    expect(getProgressPercentage(mission)).toBe(100);
+  });
+
+  it('debe retornar 100% cuando currentCount supera targetCount', () => {
+    const mission: Mission = {
+      id: 'test-1',
+      type: 'count',
+      title: 'Test',
+      description: 'Test',
+      targetCount: 10,
+      currentCount: 15,
+      active: true,
+      completed: true,
+      createdAt: new Date().toISOString(),
+    };
+    
+    expect(getProgressPercentage(mission)).toBe(100);
+  });
+
+  it('debe retornar 0% cuando no hay progreso', () => {
+    const mission: Mission = {
+      id: 'test-1',
+      type: 'count',
+      title: 'Test',
+      description: 'Test',
+      targetCount: 10,
+      currentCount: 0,
+      active: true,
+      completed: false,
+      createdAt: new Date().toISOString(),
+    };
+    
+    expect(getProgressPercentage(mission)).toBe(0);
+  });
+
+  it('debe retornar 100% cuando targetCount es 0', () => {
+    const mission: Mission = {
+      id: 'test-1',
+      type: 'count',
+      title: 'Test',
+      description: 'Test',
+      targetCount: 0,
+      currentCount: 0,
+      active: true,
+      completed: false,
+      createdAt: new Date().toISOString(),
+    };
+    
+    expect(getProgressPercentage(mission)).toBe(100);
+  });
+
+  it('debe manejar valores undefined y retornar 0%', () => {
+    const mission: Mission = {
+      id: 'test-1',
+      type: 'count',
+      title: 'Test',
+      description: 'Test',
+      targetCount: 10,
+      currentCount: 0,
+      active: true,
+      completed: false,
+      createdAt: new Date().toISOString(),
+    };
+    
+    expect(getProgressPercentage(mission)).toBe(0);
+  });
+});
+
+describe('sortMissionsByPriority', () => {
+  const createMission = (overrides: Partial<Mission>): Mission => ({
+    id: `mission-${Math.random()}`,
+    type: 'count',
+    title: 'Test',
+    description: 'Test',
+    targetCount: 10,
+    currentCount: 0,
+    active: true,
+    completed: false,
+    createdAt: new Date().toISOString(),
+    ...overrides,
+  });
+
+  it('debe poner misiones activas primero', () => {
+    const missions = [
+      createMission({ id: 'inactive', active: false }),
+      createMission({ id: 'active', active: true }),
+    ];
+    
+    const sorted = sortMissionsByPriority(missions);
+    expect(sorted[0].id).toBe('active');
+    expect(sorted[1].id).toBe('inactive');
+  });
+
+  it('debe poner misiones no completadas primero', () => {
+    const missions = [
+      createMission({ id: 'completed', completed: true, currentCount: 10 }),
+      createMission({ id: 'incomplete', completed: false, currentCount: 5 }),
+    ];
+    
+    const sorted = sortMissionsByPriority(missions);
+    expect(sorted[0].id).toBe('incomplete');
+    expect(sorted[1].id).toBe('completed');
+  });
+
+  it('debe ordenar por mayor progreso primero entre activas no completadas', () => {
+    const missions = [
+      createMission({ id: 'low', currentCount: 2 }), // 20%
+      createMission({ id: 'high', currentCount: 8 }), // 80%
+      createMission({ id: 'mid', currentCount: 5 }), // 50%
+    ];
+    
+    const sorted = sortMissionsByPriority(missions);
+    expect(sorted[0].id).toBe('high'); // 80%
+    expect(sorted[1].id).toBe('mid'); // 50%
+    expect(sorted[2].id).toBe('low'); // 20%
+  });
+
+  it('debe aplicar todos los criterios en orden correcto', () => {
+    const missions = [
+      createMission({ id: 'inactive-complete', active: false, completed: true, currentCount: 10 }),
+      createMission({ id: 'active-complete', active: true, completed: true, currentCount: 10 }),
+      createMission({ id: 'inactive-incomplete', active: false, completed: false, currentCount: 5 }),
+      createMission({ id: 'active-incomplete-low', active: true, completed: false, currentCount: 2 }),
+      createMission({ id: 'active-incomplete-high', active: true, completed: false, currentCount: 8 }),
+    ];
+    
+    const sorted = sortMissionsByPriority(missions);
+    
+    // Orden esperado:
+    // 1. active-incomplete-high (activa, no completada, 80%)
+    // 2. active-incomplete-low (activa, no completada, 20%)
+    // 3. active-complete (activa, completada)
+    // 4. inactive-incomplete (inactiva, no completada)
+    // 5. inactive-complete (inactiva, completada)
+    
+    expect(sorted[0].id).toBe('active-incomplete-high');
+    expect(sorted[1].id).toBe('active-incomplete-low');
+    expect(sorted[2].id).toBe('active-complete');
+    expect(sorted[3].id).toBe('inactive-incomplete');
+    expect(sorted[4].id).toBe('inactive-complete');
+  });
+
+  it('no debe mutar el array original', () => {
+    const missions = [
+      createMission({ id: 'second', currentCount: 2 }),
+      createMission({ id: 'first', currentCount: 8 }),
+    ];
+    
+    const original = [...missions];
+    sortMissionsByPriority(missions);
+    
+    expect(missions).toEqual(original);
+  });
+
+  it('debe manejar array vacío', () => {
+    const sorted = sortMissionsByPriority([]);
+    expect(sorted).toEqual([]);
   });
 });

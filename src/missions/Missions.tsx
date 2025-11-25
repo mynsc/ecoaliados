@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Star, Award } from 'lucide-react';
 import mockMissions from './missions.data';
 import type { Mission } from './missions.types';
-import { getTodaySum, reportItems } from './missions.utils';
+import { getTodaySum, reportItems, getProgressPercentage, sortMissionsByPriority } from './missions.utils';
 
 const STORAGE_KEY = 'ecoaliados.missions.v1';
 
@@ -70,7 +70,9 @@ export default function Missions() {
     closeModal();
   };
 
-  const mainMission = missions[0];
+  // Ordenar misiones por prioridad antes de mostrar
+  const sortedMissions = sortMissionsByPriority(missions);
+  const mainMission = sortedMissions[0];
 
   return (
     <div className="space-y-4">
@@ -91,7 +93,7 @@ export default function Missions() {
               <p className="text-md text-gray-600 mt-1">{mainMission.description}</p>
             </div>
             <Progress
-              value={mainMission.targetCount > 0 ? Math.round((mainMission.currentCount / mainMission.targetCount) * 100) : 0}
+              value={getProgressPercentage(mainMission)}
               className="w-full bg-gray-200 h-2.5 rounded-full"
             />
             <div className="text-sm text-gray-500 font-medium flex items-center gap-1">
@@ -117,7 +119,7 @@ export default function Missions() {
             <Award className="h-6 w-6 text-purple-600" /> Tus Recompensas
           </h3>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-            {missions.slice(0,6).map((m) => (
+            {sortedMissions.slice(0,6).map((m) => (
               <Badge key={m.id} variant="outline" className="bg-purple-50 text-purple-700 font-semibold text-sm py-2 px-3 flex items-center justify-center">
                 {m.reward?.title ?? m.title}
               </Badge>
@@ -133,8 +135,8 @@ export default function Missions() {
       </Card>
 
       {/* Lista de misiones */}
-      {missions.map((m) => {
-        const percent = m.targetCount > 0 ? Math.round((m.currentCount / m.targetCount) * 100) : 0;
+      {sortedMissions.map((m) => {
+        const percent = getProgressPercentage(m);
         return (
           <Card key={m.id} className="shadow-md">
             <CardContent className="p-4">

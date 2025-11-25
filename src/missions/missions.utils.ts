@@ -30,6 +30,24 @@ export function isCompleted(mission: Mission): boolean {
   return (mission.currentCount ?? 0) >= (mission.targetCount ?? Infinity);
 }
 
+/**
+ * Calcula el porcentaje de progreso de una misión (0-100).
+ * @param mission - La misión a evaluar
+ * @returns Porcentaje redondeado entre 0 y 100
+ */
+export function getProgressPercentage(mission: Mission): number {
+  const current = mission.currentCount ?? 0;
+  const target = mission.targetCount ?? 1;
+
+  // Evitar división por cero
+  if (target === 0) return 100;
+
+  const percentage = (current / target) * 100;
+  
+  // Limitar a rango 0-100 y redondear
+  return Math.round(Math.min(100, Math.max(0, percentage)));
+}
+
 /** Asegura que el array de reports no supere MAX_REPORT_EVENTS_PER_MISSION.
  *  Se asume que reports están en orden cronológico (más antiguo primero).
  */
@@ -171,4 +189,33 @@ export function reportItems(
     result: reportResult,
     missions: updatedMissions,
   };
+}
+
+/**
+ * Ordena misiones por prioridad.
+ * Criterios (en orden):
+ * 1. Misiones activas primero
+ * 2. Misiones no completadas primero
+ * 3. Mayor progreso porcentual primero (más cercanas a completar)
+ * 
+ * @param missions - Array de misiones a ordenar
+ * @returns Nuevo array ordenado (no muta el original)
+ */
+export function sortMissionsByPriority(missions: Mission[]): Mission[] {
+  return [...missions].sort((a, b) => {
+    // 1. Activas primero
+    if (a.active !== b.active) {
+      return a.active ? -1 : 1;
+    }
+
+    // 2. No completadas primero
+    if (a.completed !== b.completed) {
+      return a.completed ? 1 : -1;
+    }
+
+    // 3. Mayor progreso primero (descendente)
+    const progressA = getProgressPercentage(a);
+    const progressB = getProgressPercentage(b);
+    return progressB - progressA;
+  });
 }

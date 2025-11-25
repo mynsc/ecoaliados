@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Star, Award } from 'lucide-react';
+import { toast } from 'sonner';
 import mockMissions from './missions.data';
 import type { Mission } from './missions.types';
 import { getTodaySum, reportItems, getProgressPercentage, sortMissionsByPriority } from './missions.utils';
@@ -63,10 +64,20 @@ export default function Missions() {
     
     if (!result.success) {
       setError(result.message);
+      toast.error('Error al reportar', {
+        description: result.message,
+      });
       return;
     }
     
     setMissions(updatedMissions);
+    const mission = missions.find(m => m.id === selectedMissionId);
+    toast.success(result.message, {
+      description: result.completed 
+        ? '🎉 ¡Felicitaciones por completar la misión!' 
+        : `+${result.added} ${mission?.metadata?.unit ?? 'items'} agregados`,
+      duration: result.completed ? 5000 : 3000,
+    });
     closeModal();
   };
 

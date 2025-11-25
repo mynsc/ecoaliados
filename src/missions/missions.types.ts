@@ -51,6 +51,7 @@ export interface Mission {
   // Metadata extensible
   metadata?: {
     icon?: string;
+    unit?: string;          // unidad para los items (ej. 'chapitas', 'botellas', 'árboles', 'visitas')
     dailyLimit?: number;    // máximo por día (opcional)
     priority?: number;
     [key: string]: any;

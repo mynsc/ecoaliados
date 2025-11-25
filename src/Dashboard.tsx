@@ -21,7 +21,7 @@ export default function App() {
                   <span className="text-5xl" role="img" aria-label="Emoji de hoja">🌿</span>
                 </div>
                 <div className="text-center">
-                  <h2 className="text-2xl font-bold text-gray-800">¡Hola, Sebastián!</h2>
+                  <h2 className="text-2xl font-bold text-gray-800">¡Hola, Matias!</h2>
                   <p className="text-md text-gray-600 mt-1">
                     Hoy reciclaste <span className="font-semibold text-green-600">2.3 kg</span> de plástico. <span role="img" aria-label="Planeta Tierra">🌍</span>
                   </p>

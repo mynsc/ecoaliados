@@ -115,3 +115,60 @@ export function pushReport(
     mission: updatedMission,
   };
 }
+
+/**
+ * reportItems: busca una misión en el array por id y agrega un reporte usando pushReport.
+ * Devuelve el resultado del reporte y el array de misiones actualizado (copia inmutable).
+ * 
+ * @param missions - Array completo de misiones
+ * @param missionId - ID de la misión a reportar
+ * @param count - Cantidad a reportar (debe ser > 0)
+ * @param note - Nota opcional para el reporte
+ * @param referenceDate - Fecha de referencia (por defecto hoy)
+ * @returns Objeto con result (ReportResult) y missions (array actualizado)
+ */
+export function reportItems(
+  missions: Mission[],
+  missionId: string,
+  count: number,
+  note?: string,
+  referenceDate: Date = new Date()
+): { result: ReportResult; missions: Mission[] } {
+  // Validar que missions sea un array válido
+  if (!Array.isArray(missions)) {
+    return {
+      result: { success: false, message: 'El array de misiones no es válido.' },
+      missions: [],
+    };
+  }
+
+  // Buscar la misión por id
+  const mission = missions.find((m) => m.id === missionId);
+  if (!mission) {
+    return {
+      result: { success: false, message: 'Misión no encontrada.' },
+      missions,
+    };
+  }
+
+  // Invocar pushReport existente
+  const reportResult = pushReport(mission, count, note, referenceDate);
+
+  // Si pushReport falla, retornar sin modificar el array
+  if (!reportResult.success) {
+    return {
+      result: reportResult,
+      missions,
+    };
+  }
+
+  // Si tiene éxito, actualizar el array inmutablemente
+  const updatedMissions = missions.map((m) =>
+    m.id === missionId ? reportResult.mission! : m
+  );
+
+  return {
+    result: reportResult,
+    missions: updatedMissions,
+  };
+}

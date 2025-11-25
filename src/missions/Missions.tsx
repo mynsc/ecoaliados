@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Star, Award } from 'lucide-react';
 import mockMissions from './missions.data';
 import type { Mission } from './missions.types';
-import { getTodaySum, pushReport } from './missions.utils';
+import { getTodaySum, reportItems } from './missions.utils';
 
 const STORAGE_KEY = 'ecoaliados.missions.v1';
 
@@ -52,18 +52,21 @@ export default function Missions() {
 
   const submitReport = () => {
     if (!selectedMissionId) return;
-    const mission = missions.find((m) => m.id === selectedMissionId);
-    if (!mission) {
-      setError('Misión no encontrada.');
-      return;
-    }
-    const result = pushReport(mission, inputCount, note, new Date());
+    
+    const { result, missions: updatedMissions } = reportItems(
+      missions,
+      selectedMissionId,
+      inputCount,
+      note,
+      new Date()
+    );
+    
     if (!result.success) {
       setError(result.message);
       return;
     }
-    const updated = missions.map((m) => (m.id === selectedMissionId ? (result.mission as Mission) : m));
-    setMissions(updated);
+    
+    setMissions(updatedMissions);
     closeModal();
   };
 

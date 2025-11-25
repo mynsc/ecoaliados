@@ -37,6 +37,7 @@ export default function Missions() {
   const [inputCount, setInputCount] = useState<number>(1);
   const [note, setNote] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
+  const [justCompleted, setJustCompleted] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     saveMissionsToStorage(missions);
@@ -72,6 +73,19 @@ export default function Missions() {
     
     setMissions(updatedMissions);
     const mission = updatedMissions.find(m => m.id === selectedMissionId);
+    
+    // Animar si se completó la misión
+    if (result.completed) {
+      setJustCompleted(prev => new Set(prev).add(selectedMissionId));
+      setTimeout(() => {
+        setJustCompleted(prev => {
+          const next = new Set(prev);
+          next.delete(selectedMissionId);
+          return next;
+        });
+      }, 2000);
+    }
+    
     toast.success(result.message, {
       description: result.completed 
         ? '🎉 ¡Felicitaciones por completar la misión!' 
@@ -109,7 +123,7 @@ export default function Missions() {
             />
             <div className="text-sm text-gray-500 font-medium flex items-center gap-1">
               <Star className="h-4 w-4 text-yellow-500" />
-              Misión activa: <span className="font-bold">{mainMission.currentCount} de {mainMission.targetCount}</span>
+              Misión activa: <span className="font-bold">{mainMission.currentCount} de {mainMission.targetCount} {mainMission.metadata?.unit ?? 'items'}</span>
             </div>
             <Button
               className="w-full mt-4 bg-yellow-500 hover:bg-yellow-600 text-white shadow-md transition-colors"
@@ -149,7 +163,7 @@ export default function Missions() {
       {sortedMissions.map((m) => {
         const percent = getProgressPercentage(m);
         return (
-          <Card key={m.id} className="shadow-md">
+          <Card key={m.id} className={`shadow-md transition-all ${justCompleted.has(m.id) ? 'mission-completed' : ''}`}>
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
@@ -165,7 +179,7 @@ export default function Missions() {
                   {m.completed ? (
                     <span className="text-sm font-semibold text-green-600">Completada</span>
                   ) : (
-                    <span className="text-sm text-gray-500">{m.currentCount} / {m.targetCount}</span>
+                    <span className="text-sm text-gray-500">{m.currentCount} / {m.targetCount} {m.metadata?.unit ?? 'items'}</span>
                   )}
                 </div>
               </div>

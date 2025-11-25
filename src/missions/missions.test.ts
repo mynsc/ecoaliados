@@ -78,6 +78,7 @@ describe('reportItems', () => {
     const updatedMission = updatedMissions.find((m) => m.id === baseMission.id);
     expect(updatedMission!.completed).toBe(true);
     expect(updatedMission!.active).toBe(false);
+    expect(updatedMission!.rewardUnlocked).toBe(true);
   });
 
   it('debe respetar el límite diario si está configurado', () => {

@@ -144,8 +144,19 @@ export default function Missions() {
             <Award className="h-6 w-6 text-purple-600" /> Tus Recompensas
           </h3>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-            {sortedMissions.slice(0,6).map((m) => (
-              <Badge key={m.id} variant="outline" className="bg-purple-50 text-purple-700 font-semibold text-sm py-2 px-3 flex items-center justify-center">
+            {sortedMissions
+              .filter(m => m.rewardUnlocked && m.reward)
+              .map((m) => (
+              <Badge 
+                key={m.id} 
+                variant="outline" 
+                className={`${
+                  m.reward?.claimed 
+                    ? 'bg-gray-50 text-gray-500' 
+                    : 'bg-purple-50 text-purple-700'
+                } font-semibold text-sm py-2 px-3 flex items-center justify-center`}
+              >
+                {m.reward?.claimed ? '✓ ' : '🎁 '}
                 {m.reward?.title ?? m.title}
               </Badge>
             ))}
@@ -172,6 +183,11 @@ export default function Missions() {
                     <div>
                       <h4 className="font-bold text-gray-800">{m.title}</h4>
                       <p className="text-sm text-gray-500">{m.description}</p>
+                      {m.rewardUnlocked && !m.reward?.claimed && (
+                        <Badge variant="secondary" className="mt-1 bg-yellow-100 text-yellow-800 text-xs">
+                          🎁 Recompensa disponible
+                        </Badge>
+                      )}
                     </div>
                   </div>
                 </div>

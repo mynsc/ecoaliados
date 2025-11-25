@@ -122,6 +122,8 @@ export function pushReport(
     completed,
     // desactivar misión si quedó completada (comportamiento propuesto)
     active: completed ? false : mission.active,
+    // desbloquear recompensa al completar (una vez desbloqueado, siempre desbloqueado)
+    rewardUnlocked: completed || mission.rewardUnlocked,
   };
 
   return {

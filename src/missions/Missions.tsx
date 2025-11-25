@@ -71,7 +71,7 @@ export default function Missions() {
     }
     
     setMissions(updatedMissions);
-    const mission = missions.find(m => m.id === selectedMissionId);
+    const mission = updatedMissions.find(m => m.id === selectedMissionId);
     toast.success(result.message, {
       description: result.completed 
         ? '🎉 ¡Felicitaciones por completar la misión!' 

@@ -30,6 +30,24 @@ export function isCompleted(mission: Mission): boolean {
   return (mission.currentCount ?? 0) >= (mission.targetCount ?? Infinity);
 }
 
+/**
+ * Calcula el porcentaje de progreso de una misión (0-100).
+ * @param mission - La misión a evaluar
+ * @returns Porcentaje redondeado entre 0 y 100
+ */
+export function getProgressPercentage(mission: Mission): number {
+  const current = mission.currentCount ?? 0;
+  const target = mission.targetCount ?? 1;
+
+  // Evitar división por cero
+  if (target === 0) return 100;
+
+  const percentage = (current / target) * 100;
+  
+  // Limitar a rango 0-100 y redondear
+  return Math.round(Math.min(100, Math.max(0, percentage)));
+}
+
 /** Asegura que el array de reports no supere MAX_REPORT_EVENTS_PER_MISSION.
  *  Se asume que reports están en orden cronológico (más antiguo primero).
  */
@@ -104,6 +122,8 @@ export function pushReport(
     completed,
     // desactivar misión si quedó completada (comportamiento propuesto)
     active: completed ? false : mission.active,
+    // desbloquear recompensa al completar (una vez desbloqueado, siempre desbloqueado)
+    rewardUnlocked: completed || mission.rewardUnlocked,
   };
 
   return {
@@ -114,4 +134,90 @@ export function pushReport(
     completed,
     mission: updatedMission,
   };
+}
+
+/**
+ * reportItems: busca una misión en el array por id y agrega un reporte usando pushReport.
+ * Devuelve el resultado del reporte y el array de misiones actualizado (copia inmutable).
+ * 
+ * @param missions - Array completo de misiones
+ * @param missionId - ID de la misión a reportar
+ * @param count - Cantidad a reportar (debe ser > 0)
+ * @param note - Nota opcional para el reporte
+ * @param referenceDate - Fecha de referencia (por defecto hoy)
+ * @returns Objeto con result (ReportResult) y missions (array actualizado)
+ */
+export function reportItems(
+  missions: Mission[],
+  missionId: string,
+  count: number,
+  note?: string,
+  referenceDate: Date = new Date()
+): { result: ReportResult; missions: Mission[] } {
+  // Validar que missions sea un array válido
+  if (!Array.isArray(missions)) {
+    return {
+      result: { success: false, message: 'El array de misiones no es válido.' },
+      missions: [],
+    };
+  }
+
+  // Buscar la misión por id
+  const mission = missions.find((m) => m.id === missionId);
+  if (!mission) {
+    return {
+      result: { success: false, message: 'Misión no encontrada.' },
+      missions,
+    };
+  }
+
+  // Invocar pushReport existente
+  const reportResult = pushReport(mission, count, note, referenceDate);
+
+  // Si pushReport falla, retornar sin modificar el array
+  if (!reportResult.success) {
+    return {
+      result: reportResult,
+      missions,
+    };
+  }
+
+  // Si tiene éxito, actualizar el array inmutablemente
+  const updatedMissions = missions.map((m) =>
+    m.id === missionId ? reportResult.mission! : m
+  );
+
+  return {
+    result: reportResult,
+    missions: updatedMissions,
+  };
+}
+
+/**
+ * Ordena misiones por prioridad.
+ * Criterios (en orden):
+ * 1. Misiones activas primero
+ * 2. Misiones no completadas primero
+ * 3. Mayor progreso porcentual primero (más cercanas a completar)
+ * 
+ * @param missions - Array de misiones a ordenar
+ * @returns Nuevo array ordenado (no muta el original)
+ */
+export function sortMissionsByPriority(missions: Mission[]): Mission[] {
+  return [...missions].sort((a, b) => {
+    // 1. Activas primero
+    if (a.active !== b.active) {
+      return a.active ? -1 : 1;
+    }
+
+    // 2. No completadas primero
+    if (a.completed !== b.completed) {
+      return a.completed ? 1 : -1;
+    }
+
+    // 3. Mayor progreso primero (descendente)
+    const progressA = getProgressPercentage(a);
+    const progressB = getProgressPercentage(b);
+    return progressB - progressA;
+  });
 }

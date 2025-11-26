@@ -39,6 +39,7 @@ export interface Mission {
   // Estados
   active: boolean;        // si está activa para reportes
   completed: boolean;     // si ya se alcanzó la meta
+  rewardUnlocked?: boolean;  // si la recompensa está disponible para canjear
 
   // Fechas en formato ISO
   createdAt: string;
@@ -51,6 +52,7 @@ export interface Mission {
   // Metadata extensible
   metadata?: {
     icon?: string;
+    unit?: string;          // unidad para los items (ej. 'chapitas', 'botellas', 'árboles', 'visitas')
     dailyLimit?: number;    // máximo por día (opcional)
     priority?: number;
     [key: string]: any;

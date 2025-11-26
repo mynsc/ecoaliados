@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui';
 import { getTodaySum } from '../missions.utils';
 import type { Mission } from '../missions.types';
 

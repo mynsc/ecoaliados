@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { HomeView } from '@/features/home/components/HomeView';
-import { LeaderboardView } from '@/features/leaderboard/components/LeaderboardView';
-import { ProfileView } from '@/features/profile/components/ProfileView';
-import Missions from '@/features/missions/Missions';
+import { HomeView } from '@/features/home';
+import { LeaderboardView } from '@/features/leaderboard';
+import { ProfileView } from '@/features/profile';
+import { Missions } from '@/features/missions';
 import { BottomNavigation } from './BottomNavigation';
 
 export function MainLayout() {

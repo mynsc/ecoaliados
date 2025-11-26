@@ -1,7 +1,4 @@
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
-import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, Button, Progress, Badge } from '@/components/ui';
 import { Gift, Award } from 'lucide-react';
 
 export function HomeView() {

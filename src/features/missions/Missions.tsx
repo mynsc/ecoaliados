@@ -1,7 +1,4 @@
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
-import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, Button, Progress, Badge } from '@/components/ui';
 import { Star, Award } from 'lucide-react';
 import { useMissions } from './hooks/useMissions';
 import { MissionCard } from './components/MissionCard';
@@ -83,8 +80,8 @@ export default function Missions() {
                   key={m.id}
                   variant="outline"
                   className={`${m.reward?.claimed
-                      ? 'bg-gray-50 text-gray-500'
-                      : 'bg-purple-50 text-purple-700'
+                    ? 'bg-gray-50 text-gray-500'
+                    : 'bg-purple-50 text-purple-700'
                     } font-semibold text-sm py-2 px-3 flex items-center justify-center`}
                 >
                   {m.reward?.claimed ? '✓ ' : '🎁 '}

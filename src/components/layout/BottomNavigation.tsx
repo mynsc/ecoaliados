@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui';
 import { Home, TreePine, Trophy, User } from 'lucide-react';
 
 interface BottomNavigationProps {
@@ -23,8 +23,8 @@ export function BottomNavigation({ activeTab, onTabChange }: BottomNavigationPro
                         variant="ghost"
                         onClick={() => onTabChange(tab.id)}
                         className={`flex flex-col items-center gap-1 text-sm font-medium transition-colors ${activeTab === tab.id
-                                ? 'text-green-600 bg-green-50 rounded-lg'
-                                : 'text-gray-500 hover:bg-gray-100'
+                            ? 'text-green-600 bg-green-50 rounded-lg'
+                            : 'text-gray-500 hover:bg-gray-100'
                             }`}
                         aria-label={`Ir a ${tab.label}`}
                     >

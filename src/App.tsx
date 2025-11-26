@@ -1,5 +1,5 @@
-import EcoAliados from "./Dashboard";
+import { MainLayout } from "@/components/layout/MainLayout";
 
 export default function App() {
-  return <EcoAliados/>;
+  return <MainLayout />;
 }

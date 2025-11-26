@@ -6,6 +6,7 @@ Aplicación de gamificación ecológica que permite a los usuarios (EcoAliados y
 
 ## 📋 Tabla de Contenidos
 
+- [Características](#-características)
 - [Requisitos Previos](#-requisitos-previos)
 - [Instalación](#-instalación)
 - [Comandos Disponibles](#-comandos-disponibles)
@@ -17,12 +18,47 @@ Aplicación de gamificación ecológica que permite a los usuarios (EcoAliados y
 
 ---
 
+## ✨ Características
+
+### 🏠 Inicio
+- Dashboard personalizado con estadísticas de reciclaje
+- Visualización de progreso diario y racha de días consecutivos
+- Acceso rápido a recompensas desbloqueadas
+
+### 🌳 Misiones
+- **Sistema de misiones gamificadas** con seguimiento de progreso
+- **Reportes de actividad** con notas y conteo de items reciclados
+- **Misión principal destacada** con visualización especial
+- **Recompensas automáticas** al completar objetivos
+- **Historial de reportes** (últimos 100 eventos por misión)
+- Tipos de misión: `count` (conteo) y `visit` (visitas)
+- Validación de límites diarios y progreso
+
+### 🏆 Ranking
+- Tabla de posiciones de EcoAliados
+- Visualización de mejores recicladores
+- Estadísticas comparativas
+
+### 👤 Perfil
+- Información personal del usuario
+- Estadísticas totales (kg reciclados, misiones completadas)
+- Gestión de perfil
+
+### 🎨 Interfaz
+- **Diseño responsivo** optimizado para móviles
+- **Navegación inferior** con 4 secciones principales
+- **Animaciones** y transiciones suaves
+- **Tema personalizado** con Tailwind CSS
+- **Componentes accesibles** con shadcn/ui
+
+---
+
 ## 📦 Requisitos Previos
 
 Antes de comenzar, asegúrate de tener instalado:
 
 - **Node.js** (versión 18 o superior) - [Descargar aquí](https://nodejs.org/)
-- **npm** (incluido con Node.js) o **yarn**
+- **npm** (incluido con Node.js)
 - **Git** - [Descargar aquí](https://git-scm.com/)
 - **Editor de código** (recomendamos [VS Code](https://code.visualstudio.com/))
 
@@ -62,9 +98,11 @@ La aplicación estará disponible en `http://localhost:5173`
 | Comando | Descripción |
 |---------|-------------|
 | `npm run dev` | Inicia el servidor de desarrollo con hot-reload |
-| `npm run build` | Crea la versión optimizada para producción |
+| `npm run build` | Compila TypeScript y crea la versión optimizada para producción |
 | `npm run preview` | Previsualiza el build de producción localmente |
 | `npm run lint` | Ejecuta ESLint para revisar el código |
+| `npm run test` | Ejecuta las pruebas con Vitest |
+| `npm run tailwind:init` | Inicializa la configuración de Tailwind CSS |
 
 ---
 
@@ -72,47 +110,110 @@ La aplicación estará disponible en `http://localhost:5173`
 
 ```
 ecoaliados/
-├── public/              # Archivos estáticos (imágenes, iconos, etc.)
+├── public/                      # Archivos estáticos (imágenes, iconos, etc.)
 ├── src/
-│   ├── components/      # Componentes reutilizables
-│   │   └── ui/         # Componentes base de UI (buttons, cards, etc.)
-│   ├── lib/            # Utilidades y helpers
-│   ├── assets/         # Recursos de la aplicación
-│   ├── App.tsx         # Componente raíz con lógica de autenticación
-│   ├── Dashboard.tsx   # Componente principal de la aplicación
-│   ├── main.tsx        # Punto de entrada de React
-│   └── index.css       # Estilos globales (Tailwind CSS)
-├── index.html          # HTML base
-├── package.json        # Dependencias y scripts
-├── vite.config.ts      # Configuración de Vite
-├── tsconfig.json       # Configuración de TypeScript
-└── README.md           # Este archivo
+│   ├── components/              # Componentes reutilizables
+│   │   ├── layout/             # Componentes de estructura
+│   │   │   ├── MainLayout.tsx  # Layout principal con navegación por tabs
+│   │   │   ├── BottomNavigation.tsx  # Barra de navegación inferior
+│   │   │   └── index.ts
+│   │   └── ui/                 # Componentes base de UI (shadcn/ui)
+│   │       ├── button.tsx
+│   │       ├── card.tsx
+│   │       ├── badge.tsx
+│   │       ├── progress.tsx
+│   │       └── index.ts
+│   ├── features/               # Funcionalidades por módulos
+│   │   ├── home/              # Módulo de Inicio
+│   │   │   ├── components/
+│   │   │   │   └── HomeView.tsx
+│   │   │   └── index.ts
+│   │   ├── missions/          # Módulo de Misiones
+│   │   │   ├── components/
+│   │   │   │   ├── MissionCard.tsx
+│   │   │   │   └── MissionReportModal.tsx
+│   │   │   ├── hooks/
+│   │   │   │   └── useMissions.ts
+│   │   │   ├── Missions.tsx
+│   │   │   ├── missions.types.ts    # Tipos e interfaces
+│   │   │   ├── missions.utils.ts    # Utilidades
+│   │   │   ├── missions.data.ts     # Datos iniciales
+│   │   │   ├── missions.test.ts     # Tests con Vitest
+│   │   │   └── index.ts
+│   │   ├── leaderboard/       # Módulo de Ranking
+│   │   │   ├── components/
+│   │   │   │   └── LeaderboardView.tsx
+│   │   │   └── index.ts
+│   │   └── profile/           # Módulo de Perfil
+│   │       ├── components/
+│   │       │   └── ProfileView.tsx
+│   │       └── index.ts
+│   ├── lib/                   # Utilidades y helpers
+│   │   └── utils.ts          # Función cn() para clases condicionales
+│   ├── App.tsx               # Componente raíz
+│   ├── main.tsx              # Punto de entrada de React
+│   ├── index.css             # Estilos globales (Tailwind CSS)
+│   └── vite-env.d.ts         # Tipos de Vite
+├── components.json             # Configuración de shadcn/ui
+├── eslint.config.js           # Configuración de ESLint
+├── index.html                 # HTML base
+├── package.json               # Dependencias y scripts
+├── pnpm-lock.yaml            # Lock file de pnpm
+├── pnpm-workspace.yaml       # Configuración de workspace
+├── tsconfig.json             # Configuración de TypeScript
+├── tsconfig.app.json         # Config TS para la app
+├── tsconfig.node.json        # Config TS para Node
+├── vite.config.ts            # Configuración de Vite
+└── README.md                 # Este archivo
 ```
 
 ### Convenciones de carpetas:
-- **`components/ui/`**: Componentes base reutilizables (botones, tarjetas, badges)
-- **`components/layout/`**: Componentes de estructura (header, footer, navigation)
-- **`components/features/`**: Componentes específicos de funcionalidades (login, missions, profile)
-- **`lib/`**: Funciones utilitarias y helpers
-- **`hooks/`**: Custom React hooks (cuando se agreguen)
-- **`types/`**: Tipos e interfaces de TypeScript compartidos (cuando se agreguen)
+- **`components/ui/`**: Componentes base reutilizables de shadcn/ui (botones, tarjetas, badges, progress)
+- **`components/layout/`**: Componentes de estructura (MainLayout, BottomNavigation)
+- **`features/`**: Módulos de funcionalidades organizados por feature
+  - Cada feature tiene su propia carpeta con `components/`, `hooks/`, tipos, utilidades y tests
+  - Estructura modular: `home/`, `missions/`, `leaderboard/`, `profile/`
+- **`lib/`**: Funciones utilitarias compartidas (ej. `cn()` para Tailwind)
+
+### Arquitectura de Features:
+Cada módulo en `features/` sigue una estructura consistente:
+```
+feature-name/
+├── components/           # Componentes específicos del feature
+├── hooks/               # Custom hooks del feature
+├── FeatureName.tsx      # Componente principal exportado
+├── feature-name.types.ts    # Tipos TypeScript
+├── feature-name.utils.ts    # Funciones utilitarias
+├── feature-name.data.ts     # Datos mock o iniciales
+├── feature-name.test.ts     # Tests con Vitest
+└── index.ts             # Exportaciones públicas
+```
 
 ---
 
 ## 🔧 Tecnologías Utilizadas
 
 ### Core:
-- **[React 18](https://react.dev/)** - Librería de UI
-- **[TypeScript](https://www.typescriptlang.org/)** - Tipado estático
-- **[Vite](https://vitejs.dev/)** - Build tool y dev server
+- **[React 19](https://react.dev/)** - Librería de UI
+- **[TypeScript 5.8](https://www.typescriptlang.org/)** - Tipado estático
+- **[Vite 7](https://vitejs.dev/)** - Build tool ultra rápido con HMR
 
-### Estilos:
-- **[Tailwind CSS](https://tailwindcss.com/)** - Framework de CSS utility-first
-- **[shadcn/ui](https://ui.shadcn.com/)** - Componentes de UI accesibles y personalizables
+### UI y Estilos:
+- **[Tailwind CSS 4](https://tailwindcss.com/)** - Framework CSS utility-first
+- **[shadcn/ui](https://ui.shadcn.com/)** - Componentes accesibles y personalizables
+- **[Radix UI](https://www.radix-ui.com/)** - Primitivos de UI sin estilos
+- **[Lucide React](https://lucide.dev/)** - Biblioteca de iconos moderna
+- **[class-variance-authority](https://cva.style/)** - Variantes de componentes
+- **[tailwind-merge](https://github.com/dcastil/tailwind-merge)** - Merge inteligente de clases
+- **[Sonner](https://sonner.emilkowal.ski/)** - Toast notifications elegantes
+
+### Testing:
+- **[Vitest 4](https://vitest.dev/)** - Framework de testing ultra rápido
 
 ### Herramientas de desarrollo:
-- **ESLint** - Linter de código
-- **SWC** - Compilador rápido de JavaScript/TypeScript
+- **ESLint 9** - Linter de código con plugins para React
+- **@vitejs/plugin-react-swc** - Compilador ultra rápido con SWC
+- **TypeScript ESLint** - Reglas de linting para TypeScript
 
 ---
 

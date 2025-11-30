@@ -6,8 +6,10 @@ import { MissionCard } from './components/MissionCard';
 import { MissionReportModal } from './components/MissionReportModal';
 import { getProgressPercentage } from './missions.utils';
 import type { Mission } from './missions.types';
+import { useProfileContext } from '@/contexts';
 
 export default function Missions() {
+  const { profile } = useProfileContext();
   const {
     setMissions,
     sortedMissions,
@@ -46,7 +48,7 @@ export default function Missions() {
               <span className="absolute bottom-0 right-0 text-xl animate-pulse" role="img" aria-label="Efecto de brillo">✨</span>
             </div>
             <div className="text-center">
-              <h2 className="text-2xl font-bold text-gray-800">¡Hola, EcoGuardián!</h2>
+              <h2 className="text-2xl font-bold text-gray-800">Sigue adelante, {profile.name}!</h2>
               <p className="text-md text-gray-600 mt-1">{mainMission.description}</p>
             </div>
             <Progress

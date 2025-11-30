@@ -21,9 +21,12 @@ Aplicación de gamificación ecológica que permite a los usuarios (EcoAliados y
 ## ✨ Características
 
 ### 🏠 Inicio
-- Dashboard personalizado con estadísticas de reciclaje
-- Visualización de progreso diario y racha de días consecutivos
-- Acceso rápido a recompensas desbloqueadas
+- **Dashboard personalizado** con avatar y nombre del perfil
+- **Estadísticas de reciclaje** y progreso diario sincronizado con Misiones
+- **Racha de días consecutivos** con visualización de progreso
+- **Sección de recompensas** desbloqueadas expandible/colapsable
+- Acceso rápido a misiones con navegación integrada
+- Saludo personalizado con nombre del usuario
 
 ### 🌳 Misiones
 - **Sistema de misiones gamificadas** con seguimiento de progreso
@@ -35,14 +38,22 @@ Aplicación de gamificación ecológica que permite a los usuarios (EcoAliados y
 - Validación de límites diarios y progreso
 
 ### 🏆 Ranking
-- Tabla de posiciones de EcoAliados
-- Visualización de mejores recicladores
-- Estadísticas comparativas
+- **Tabla de posiciones competitiva** con sistema de NPCs
+- **Generación dinámica** de 7-10 competidores con stats realistas
+- **Medallas y destacados**: trofeo oro, plata, bronce para top 3
+- **Resaltado del usuario** con borde verde en su posición
+- **Stats variadas**: ±50% de variación respecto al usuario para realismo
+- Visualización de kg reciclados, misiones completadas y racha
+- Motivación para mejorar posición en el ranking
 
 ### 👤 Perfil
-- Información personal del usuario
-- Estadísticas totales (kg reciclados, misiones completadas)
-- Gestión de perfil
+- **Sistema de perfiles personalizables** con Context API y localStorage
+- **Avatar temático** con 20 opciones eco-friendly (🌱, ♻️, 🌍, etc.)
+- **Nombre personalizable** con validación (2-50 caracteres)
+- **Estadísticas totales**: kg reciclados, misiones completadas, racha actual
+- **Modal de edición** con validación en tiempo real y UX optimizada
+- **Persistencia automática** en localStorage (key: `ecoaliados.profile.v1`)
+- Sincronización global con Home, Misiones y Ranking
 
 ### 🎨 Interfaz
 - **Diseño responsivo** optimizado para móviles
@@ -58,7 +69,7 @@ Aplicación de gamificación ecológica que permite a los usuarios (EcoAliados y
 Antes de comenzar, asegúrate de tener instalado:
 
 - **Node.js** (versión 18 o superior) - [Descargar aquí](https://nodejs.org/)
-- **npm** (incluido con Node.js)
+- **npm** o **pnpm** (gestor de paquetes)
 - **Git** - [Descargar aquí](https://git-scm.com/)
 - **Editor de código** (recomendamos [VS Code](https://code.visualstudio.com/))
 
@@ -79,8 +90,14 @@ cd ecoaliados
 
 ### 2. Instalar dependencias
 
+Usando npm:
 ```bash
 npm install
+```
+
+O usando pnpm (recomendado):
+```bash
+pnpm install
 ```
 
 ### 3. Iniciar el servidor de desarrollo
@@ -97,11 +114,11 @@ La aplicación estará disponible en `http://localhost:5173`
 
 | Comando | Descripción |
 |---------|-------------|
-| `npm run dev` | Inicia el servidor de desarrollo con hot-reload |
-| `npm run build` | Compila TypeScript y crea la versión optimizada para producción |
-| `npm run preview` | Previsualiza el build de producción localmente |
-| `npm run lint` | Ejecuta ESLint para revisar el código |
-| `npm run test` | Ejecuta las pruebas con Vitest |
+| `npm run dev` / `pnpm dev` | Inicia el servidor de desarrollo con hot-reload |
+| `npm run build` / `pnpm build` | Compila TypeScript y crea la versión optimizada para producción |
+| `npm run preview` / `pnpm preview` | Previsualiza el build de producción localmente |
+| `npm run lint` / `pnpm lint` | Ejecuta ESLint para revisar el código |
+| `npm run test` / `pnpm test` | Ejecuta las pruebas con Vitest |
 | `npm run tailwind:init` | Inicializa la configuración de Tailwind CSS |
 
 ---
@@ -122,6 +139,9 @@ ecoaliados/
 │   │       ├── card.tsx
 │   │       ├── badge.tsx
 │   │       ├── progress.tsx
+│   │       ├── dialog.tsx
+│   │       ├── input.tsx
+│   │       ├── label.tsx
 │   │       └── index.ts
 │   ├── features/               # Funcionalidades por módulos
 │   │   ├── home/              # Módulo de Inicio
@@ -143,11 +163,24 @@ ecoaliados/
 │   │   ├── leaderboard/       # Módulo de Ranking
 │   │   │   ├── components/
 │   │   │   │   └── LeaderboardView.tsx
+│   │   │   ├── hooks/
+│   │   │   │   └── useLeaderboard.ts
+│   │   │   ├── leaderboard.utils.ts    # Generación de NPCs y rankings
 │   │   │   └── index.ts
 │   │   └── profile/           # Módulo de Perfil
 │   │       ├── components/
-│   │       │   └── ProfileView.tsx
+│   │       │   ├── ProfileView.tsx
+│   │       │   └── ProfileEditModal.tsx
+│   │       ├── hooks/
+│   │       │   └── useProfileStats.ts
+│   │       ├── profile.utils.ts    # Cálculos de estadísticas
 │   │       └── index.ts
+│   ├── contexts/              # Contextos globales (Context API)
+│   │   ├── MissionsContext.ts
+│   │   ├── MissionsProvider.tsx
+│   │   ├── ProfileContext.ts
+│   │   ├── ProfileProvider.tsx
+│   │   └── index.ts          # Hooks personalizados (useMissionsContext, useProfileContext)
 │   ├── lib/                   # Utilidades y helpers
 │   │   └── utils.ts          # Función cn() para clases condicionales
 │   ├── App.tsx               # Componente raíz
@@ -168,8 +201,11 @@ ecoaliados/
 ```
 
 ### Convenciones de carpetas:
-- **`components/ui/`**: Componentes base reutilizables de shadcn/ui (botones, tarjetas, badges, progress)
+- **`components/ui/`**: Componentes base reutilizables de shadcn/ui (button, card, badge, progress, dialog, input, label)
 - **`components/layout/`**: Componentes de estructura (MainLayout, BottomNavigation)
+- **`contexts/`**: Contextos globales con Context API (MissionsContext, ProfileContext) y sus Providers
+  - Incluye hooks personalizados: `useMissionsContext()`, `useProfileContext()`
+  - Persistencia automática en localStorage
 - **`features/`**: Módulos de funcionalidades organizados por feature
   - Cada feature tiene su propia carpeta con `components/`, `hooks/`, tipos, utilidades y tests
   - Estructura modular: `home/`, `missions/`, `leaderboard/`, `profile/`
@@ -201,11 +237,17 @@ feature-name/
 ### UI y Estilos:
 - **[Tailwind CSS 4](https://tailwindcss.com/)** - Framework CSS utility-first
 - **[shadcn/ui](https://ui.shadcn.com/)** - Componentes accesibles y personalizables
-- **[Radix UI](https://www.radix-ui.com/)** - Primitivos de UI sin estilos
+- **[Radix UI](https://www.radix-ui.com/)** - Primitivos de UI sin estilos (Dialog, Label, Progress, Slot)
 - **[Lucide React](https://lucide.dev/)** - Biblioteca de iconos moderna
 - **[class-variance-authority](https://cva.style/)** - Variantes de componentes
 - **[tailwind-merge](https://github.com/dcastil/tailwind-merge)** - Merge inteligente de clases
 - **[Sonner](https://sonner.emilkowal.ski/)** - Toast notifications elegantes
+
+### Estado Global:
+- **Context API** - Gestión de estado con MissionsContext y ProfileContext
+- **localStorage** - Persistencia de datos del cliente
+  - `ecoaliados.missions.v1` - Estado de misiones y progreso
+  - `ecoaliados.profile.v1` - Perfil del usuario (nombre, avatar, fecha)
 
 ### Testing:
 - **[Vitest 4](https://vitest.dev/)** - Framework de testing ultra rápido

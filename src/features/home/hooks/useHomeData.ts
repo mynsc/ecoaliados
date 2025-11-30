@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { calculateStreak } from '@/features/missions/missions.utils';
+import { calculateTotalItems, calculateTotalKg, calculateCompletedMissions } from '@/features/profile/profile.utils';
 import { useMissionsContext } from '@/contexts';
 
 /**
@@ -12,6 +13,7 @@ import { useMissionsContext } from '@/contexts';
 export function useHomeData() {
   // Obtener misiones del contexto global
   const { missions } = useMissionsContext();
+  
   // Calcular racha de días consecutivos
   const streak = useMemo(() => calculateStreak(missions), [missions]);
 
@@ -27,8 +29,8 @@ export function useHomeData() {
     // Sumar items reportados hoy
     const totalItemsToday = todayReports.reduce((sum, r) => sum + r.added, 0);
 
-    // Convertir a kilogramos (asumiendo ~150g por item promedio)
-    return (totalItemsToday * 0.15).toFixed(1);
+    // Convertir a kilogramos usando la función compartida
+    return calculateTotalKg(totalItemsToday);
   }, [missions]);
 
   // Calcular progreso hacia el próximo hito de racha
@@ -49,14 +51,14 @@ export function useHomeData() {
     return milestones.find(m => m > streak) || 365;
   }, [streak]);
 
-  // Calcular total de misiones completadas
+  // Calcular total de misiones completadas (usando función compartida)
   const completedMissions = useMemo(() => {
-    return missions.filter(m => m.completed).length;
+    return calculateCompletedMissions(missions);
   }, [missions]);
 
-  // Calcular total de items reportados (lifetime)
+  // Calcular total de items reportados (lifetime) usando función compartida
   const totalItemsRecycled = useMemo(() => {
-    return missions.reduce((sum, m) => sum + (m.currentCount || 0), 0);
+    return calculateTotalItems(missions);
   }, [missions]);
 
   return {

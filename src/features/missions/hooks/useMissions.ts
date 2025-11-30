@@ -1,42 +1,18 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { toast } from 'sonner';
-import mockMissions from '../missions.data';
-import type { Mission } from '../missions.types';
 import { reportItems, sortMissionsByPriority } from '../missions.utils';
-
-const STORAGE_KEY = 'ecoaliados.missions.v1';
-
-function loadMissionsFromStorage(): Mission[] | null {
-    try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if (!raw) return null;
-        const parsed = JSON.parse(raw);
-        if (parsed?.v === 1 && Array.isArray(parsed.missions)) return parsed.missions;
-        return null;
-    } catch {
-        return null;
-    }
-}
-
-function saveMissionsToStorage(missions: Mission[]) {
-    try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify({ v: 1, missions }));
-    } catch {
-        // silent
-    }
-}
+import { useMissionsContext } from '@/contexts';
 
 export function useMissions() {
-    const [missions, setMissions] = useState<Mission[]>(() => loadMissionsFromStorage() ?? mockMissions);
+    // Obtener el estado de misiones del contexto global
+    const { missions, setMissions } = useMissionsContext();
+    
+    // Estado local para la UI del modal y animaciones
     const [selectedMissionId, setSelectedMissionId] = useState<string | null>(null);
     const [inputCount, setInputCount] = useState<number>(1);
     const [note, setNote] = useState<string>('');
     const [error, setError] = useState<string | null>(null);
     const [justCompleted, setJustCompleted] = useState<Set<string>>(new Set());
-
-    useEffect(() => {
-        saveMissionsToStorage(missions);
-    }, [missions]);
 
     const openReport = (id: string) => {
         setError(null);

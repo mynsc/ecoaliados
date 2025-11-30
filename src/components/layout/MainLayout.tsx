@@ -2,17 +2,16 @@ import { useState } from 'react';
 import { HomeView } from '@/features/home';
 import { LeaderboardView } from '@/features/leaderboard';
 import { ProfileView } from '@/features/profile';
-import { Missions, useMissions } from '@/features/missions';
+import { Missions } from '@/features/missions';
 import { BottomNavigation } from './BottomNavigation';
 
 export function MainLayout() {
     const [activeTab, setActiveTab] = useState('home');
-    const { missions } = useMissions();
 
     const renderContent = () => {
         switch (activeTab) {
             case 'home':
-                return <HomeView missions={missions} />;
+                return <HomeView />;
             case 'missions':
                 return <Missions />;
             case 'leaderboard':

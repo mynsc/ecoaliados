@@ -1,5 +1,10 @@
 import { MainLayout } from "@/components/layout";
+import { MissionsProvider } from "@/contexts";
 
 export default function App() {
-  return <MainLayout />;
+  return (
+    <MissionsProvider>
+      <MainLayout />
+    </MissionsProvider>
+  );
 }

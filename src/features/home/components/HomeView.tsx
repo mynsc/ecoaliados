@@ -1,14 +1,9 @@
 import { Card, CardContent, Button, Progress, Badge } from '@/components/ui';
 import { Gift, Award } from 'lucide-react';
 import { useHomeData } from '../hooks/useHomeData';
-import type { Mission } from '@/features/missions/missions.types';
 
-interface HomeViewProps {
-    missions: Mission[];
-}
-
-export function HomeView({ missions }: HomeViewProps) {
-    const { streak, todayRecycled, streakProgress, nextMilestone } = useHomeData(missions);
+export function HomeView() {
+    const { streak, todayRecycled, streakProgress, nextMilestone } = useHomeData();
 
     return (
         <div className="space-y-6">

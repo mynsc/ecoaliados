@@ -112,7 +112,7 @@ export default function Missions() {
           <CardContent className="p-6 flex flex-col items-center space-y-4">
             <div className="relative">
               <img
-                src="https://placehold.co/100x100/A3E635/000?text=M"
+                src={`https://placehold.co/100x100/A3E635/000?text=${profile.name.charAt(0).toUpperCase()}`}
                 alt={mainMission.title}
                 className="rounded-full border-4 border-lime-400 p-1"
               />

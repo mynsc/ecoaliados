@@ -7,9 +7,10 @@ interface MissionCardProps {
     isJustCompleted: boolean;
     onReport: (id: string) => void;
     onDevComplete: (mission: Mission) => void;
+    devModeEnabled?: boolean;
 }
 
-export function MissionCard({ mission, isJustCompleted, onReport, onDevComplete }: MissionCardProps) {
+export function MissionCard({ mission, isJustCompleted, onReport, onDevComplete, devModeEnabled }: MissionCardProps) {
     const percent = getProgressPercentage(mission);
 
     return (
@@ -55,9 +56,17 @@ export function MissionCard({ mission, isJustCompleted, onReport, onDevComplete 
                     >
                         Reportar
                     </Button>
-                    <Button variant="ghost" onClick={() => onDevComplete(mission)}>
-                        Marcar como completada (dev)
-                    </Button>
+                    
+                    {devModeEnabled && (
+                        <Button 
+                            variant="ghost" 
+                            onClick={() => onDevComplete(mission)}
+                            className="text-xs border-dashed border-orange-400"
+                            aria-label="Marcar como completada (desarrollo)"
+                        >
+                            ✓ Dev Complete
+                        </Button>
+                    )}
                 </div>
             </CardContent>
         </Card>

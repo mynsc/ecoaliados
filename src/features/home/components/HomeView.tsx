@@ -1,9 +1,15 @@
+import { useState } from 'react';
 import { Card, CardContent, Button, Progress, Badge } from '@/components/ui';
-import { Gift, Award } from 'lucide-react';
+import { Gift, Award, ChevronDown, ChevronUp } from 'lucide-react';
 import { useHomeData } from '../hooks/useHomeData';
 
-export function HomeView() {
+interface HomeViewProps {
+    onNavigateToMissions: () => void;
+}
+
+export function HomeView({ onNavigateToMissions }: HomeViewProps) {
     const { streak, todayRecycled, streakProgress, nextMilestone } = useHomeData();
+    const [isRewardsExpanded, setIsRewardsExpanded] = useState(false);
 
     return (
         <div className="space-y-6">
@@ -35,6 +41,7 @@ export function HomeView() {
                     <Button
                         className="w-full mt-4 bg-green-600 hover:bg-green-700 text-white shadow-md transition-colors"
                         aria-label="Registrar nuevo reciclaje"
+                        onClick={onNavigateToMissions}
                     >
                         Registrar nuevo reciclaje
                     </Button>
@@ -58,11 +65,54 @@ export function HomeView() {
                             Sticker especial
                         </Badge>
                     </div>
-                    <Button
-                        className="w-full mt-4 bg-purple-600 hover:bg-purple-700 text-white shadow-md transition-colors"
-                        aria-label="Canjear más recompensas"
+                    
+                    {/* Contenido expandible */}
+                    <div 
+                        className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                            isRewardsExpanded ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+                        }`}
                     >
-                        Canjear más recompensas
+                        <div className="pt-4 space-y-3 border-t border-gray-200">
+                            <p className="text-sm text-gray-600 font-medium">Más recompensas disponibles:</p>
+                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                                <Badge variant="outline" className="bg-blue-50 text-blue-700 font-semibold text-sm py-2 px-3 flex items-center justify-center">
+                                    15% en Cineplanet
+                                </Badge>
+                                <Badge variant="outline" className="bg-blue-50 text-blue-700 font-semibold text-sm py-2 px-3 flex items-center justify-center">
+                                    Delivery gratis
+                                </Badge>
+                                <Badge variant="outline" className="bg-blue-50 text-blue-700 font-semibold text-sm py-2 px-3 flex items-center justify-center">
+                                    3x2 en Starbucks
+                                </Badge>
+                                <Badge variant="outline" className="bg-blue-50 text-blue-700 font-semibold text-sm py-2 px-3 flex items-center justify-center">
+                                    20% en H&M
+                                </Badge>
+                                <Badge variant="outline" className="bg-blue-50 text-blue-700 font-semibold text-sm py-2 px-3 flex items-center justify-center">
+                                    Pin exclusivo
+                                </Badge>
+                                <Badge variant="outline" className="bg-blue-50 text-blue-700 font-semibold text-sm py-2 px-3 flex items-center justify-center">
+                                    Bolsa reutilizable
+                                </Badge>
+                            </div>
+                        </div>
+                    </div>
+
+                    <Button
+                        className="w-full mt-4 bg-purple-600 hover:bg-purple-700 text-white shadow-md transition-colors flex items-center justify-center gap-2"
+                        aria-label="Canjear más recompensas"
+                        onClick={() => setIsRewardsExpanded(!isRewardsExpanded)}
+                    >
+                        {isRewardsExpanded ? (
+                            <>
+                                Ver menos recompensas
+                                <ChevronUp className="h-4 w-4" />
+                            </>
+                        ) : (
+                            <>
+                                Canjear más recompensas
+                                <ChevronDown className="h-4 w-4" />
+                            </>
+                        )}
                     </Button>
                 </CardContent>
             </Card>

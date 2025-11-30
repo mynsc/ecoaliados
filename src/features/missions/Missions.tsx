@@ -1,5 +1,6 @@
+import { useState } from 'react';
 import { Card, CardContent, Button, Progress, Badge } from '@/components/ui';
-import { Star, Award } from 'lucide-react';
+import { Star, Gift, ChevronDown, ChevronUp } from 'lucide-react';
 import { useMissions } from './hooks/useMissions';
 import { MissionCard } from './components/MissionCard';
 import { MissionReportModal } from './components/MissionReportModal';
@@ -23,9 +24,11 @@ export default function Missions() {
     submitReport,
   } = useMissions();
 
+  const [isRewardsExpanded, setIsRewardsExpanded] = useState(false);
+
   const handleDevComplete = (m: Mission) => {
     const manual: Mission = { ...m, currentCount: m.targetCount, completed: true, active: false, updatedAt: new Date().toISOString() };
-    setMissions(ms => ms.map(x => x.id === m.id ? manual : x));
+    setMissions(sortedMissions.map(x => x.id === m.id ? manual : x));
   };
 
   return (
@@ -70,11 +73,12 @@ export default function Missions() {
       <Card className="shadow-lg transition-all hover:shadow-md">
         <CardContent className="p-6 space-y-4">
           <h3 className="text-xl font-bold text-gray-800 flex items-center gap-2">
-            <Award className="h-6 w-6 text-purple-600" /> Tus Recompensas
+            <Gift className="h-6 w-6 text-purple-600" /> Tus Recompensas
           </h3>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
             {sortedMissions
               .filter(m => m.rewardUnlocked && m.reward)
+              .slice(0, 3)
               .map((m) => (
                 <Badge
                   key={m.id}
@@ -89,11 +93,52 @@ export default function Missions() {
                 </Badge>
               ))}
           </div>
-          <Button
-            className="w-full mt-4 bg-purple-600 hover:bg-purple-700 text-white shadow-md transition-colors"
-            aria-label="Canjear más recompensas"
+
+          {/* Contenido expandible */}
+          <div 
+            className={`overflow-hidden transition-all duration-300 ease-in-out ${
+              isRewardsExpanded ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+            }`}
           >
-            Canjear más recompensas
+            <div className="pt-4 space-y-3 border-t border-gray-200">
+              <p className="text-sm text-gray-600 font-medium">Más recompensas desbloqueadas:</p>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                {sortedMissions
+                  .filter(m => m.rewardUnlocked && m.reward)
+                  .slice(3)
+                  .map((m) => (
+                    <Badge
+                      key={m.id}
+                      variant="outline"
+                      className={`${m.reward?.claimed
+                        ? 'bg-gray-50 text-gray-500'
+                        : 'bg-blue-50 text-blue-700'
+                        } font-semibold text-sm py-2 px-3 flex items-center justify-center`}
+                    >
+                      {m.reward?.claimed ? '✓ ' : '🎁 '}
+                      {m.reward?.title ?? m.title}
+                    </Badge>
+                  ))}
+              </div>
+            </div>
+          </div>
+
+          <Button
+            className="w-full mt-4 bg-purple-600 hover:bg-purple-700 text-white shadow-md transition-colors flex items-center justify-center gap-2"
+            aria-label="Canjear más recompensas"
+            onClick={() => setIsRewardsExpanded(!isRewardsExpanded)}
+          >
+            {isRewardsExpanded ? (
+              <>
+                Ver menos recompensas
+                <ChevronUp className="h-4 w-4" />
+              </>
+            ) : (
+              <>
+                Ver más recompensas
+                <ChevronDown className="h-4 w-4" />
+              </>
+            )}
           </Button>
         </CardContent>
       </Card>

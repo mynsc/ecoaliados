@@ -11,7 +11,7 @@ export function MainLayout() {
     const renderContent = () => {
         switch (activeTab) {
             case 'home':
-                return <HomeView />;
+                return <HomeView onNavigateToMissions={() => setActiveTab('missions')} />;
             case 'missions':
                 return <Missions />;
             case 'leaderboard':

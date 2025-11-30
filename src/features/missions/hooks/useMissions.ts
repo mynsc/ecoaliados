@@ -21,7 +21,7 @@ function loadMissionsFromStorage(): Mission[] | null {
 function saveMissionsToStorage(missions: Mission[]) {
     try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify({ v: 1, missions }));
-    } catch (e) {
+    } catch {
         // silent
     }
 }

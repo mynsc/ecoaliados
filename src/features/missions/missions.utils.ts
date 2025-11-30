@@ -258,3 +258,64 @@ export function sortMissionsByPriority(missions: Mission[]): Mission[] {
     return dateB - dateA;
   });
 }
+
+/**
+ * Calcula la racha de días consecutivos con reportes.
+ * Una racha se mantiene si hay al menos un reporte por día, contando desde hoy o ayer.
+ * Si el último reporte es de hace más de 1 día, la racha se considera rota (retorna 0).
+ * 
+ * @param missions - Array de todas las misiones del usuario
+ * @returns Número de días consecutivos con al menos un reporte (0 si no hay racha activa)
+ * 
+ * @example
+ * // Usuario reportó hoy, ayer y anteayer
+ * calculateStreak(missions) // => 3
+ * 
+ * // Usuario reportó hace 3 días (racha rota)
+ * calculateStreak(missions) // => 0
+ */
+export function calculateStreak(missions: Mission[]): number {
+  // Recolectar todos los reportes de todas las misiones
+  const allReports = missions.flatMap(m => m.reports ?? []);
+  
+  if (allReports.length === 0) return 0;
+
+  // Extraer fechas únicas en formato YYYY-MM-DD
+  const reportDates = allReports.map(r => toYMD(r.timestamp));
+  const uniqueDates = [...new Set(reportDates)].sort((a, b) => b.localeCompare(a)); // descendente
+
+  if (uniqueDates.length === 0) return 0;
+
+  // Verificar si la racha está activa (último reporte fue hoy o ayer)
+  const today = toYMD(new Date());
+  const yesterday = toYMD(new Date(Date.now() - 24 * 60 * 60 * 1000));
+  
+  const mostRecentDate = uniqueDates[0];
+  
+  // Si el último reporte no es de hoy ni de ayer, la racha está rota
+  if (mostRecentDate !== today && mostRecentDate !== yesterday) {
+    return 0;
+  }
+
+  // Contar días consecutivos hacia atrás desde el más reciente
+  let streak = 1;
+  let currentDate = new Date(mostRecentDate);
+
+  for (let i = 1; i < uniqueDates.length; i++) {
+    // Calcular el día anterior esperado
+    const previousDay = new Date(currentDate);
+    previousDay.setDate(previousDay.getDate() - 1);
+    const expectedDate = toYMD(previousDay);
+
+    // Si la siguiente fecha en el array es el día anterior consecutivo, incrementar racha
+    if (uniqueDates[i] === expectedDate) {
+      streak++;
+      currentDate = new Date(uniqueDates[i]);
+    } else {
+      // La secuencia se rompió
+      break;
+    }
+  }
+
+  return streak;
+}

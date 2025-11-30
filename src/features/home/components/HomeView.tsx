@@ -1,7 +1,15 @@
 import { Card, CardContent, Button, Progress, Badge } from '@/components/ui';
 import { Gift, Award } from 'lucide-react';
+import { useHomeData } from '../hooks/useHomeData';
+import type { Mission } from '@/features/missions/missions.types';
 
-export function HomeView() {
+interface HomeViewProps {
+    missions: Mission[];
+}
+
+export function HomeView({ missions }: HomeViewProps) {
+    const { streak, todayRecycled, streakProgress, nextMilestone } = useHomeData(missions);
+
     return (
         <div className="space-y-6">
             {/* --- Tarjeta de Bienvenida --- */}
@@ -13,17 +21,22 @@ export function HomeView() {
                     <div className="text-center">
                         <h2 className="text-2xl font-bold text-gray-800">¡Hola, Matias!</h2>
                         <p className="text-md text-gray-600 mt-1">
-                            Hoy reciclaste <span className="font-semibold text-green-600">2.3 kg</span> de plástico. <span role="img" aria-label="Planeta Tierra">🌍</span>
+                            Hoy reciclaste <span className="font-semibold text-green-600">{todayRecycled} kg</span> de plástico. <span role="img" aria-label="Planeta Tierra">🌍</span>
                         </p>
                     </div>
                     <Progress
-                        value={10}
+                        value={streakProgress}
                         className="w-full bg-gray-200 h-2.5 rounded-full"
                     />
                     <div className="text-sm text-gray-500 font-medium flex items-center gap-1">
                         <Award className="h-4 w-4 text-yellow-500" />
-                        Racha de <span className="font-bold">7 días</span> <span role="img" aria-label="Símbolo de reciclaje">♻️</span>
+                        Racha de <span className="font-bold">{streak} {streak === 1 ? 'día' : 'días'}</span> {streak > 0 ? '🔥' : '♻️'}
                     </div>
+                    {streak > 0 && nextMilestone && (
+                        <p className="text-xs text-gray-500 text-center">
+                            ¡{nextMilestone - streak} {nextMilestone - streak === 1 ? 'día' : 'días'} más para alcanzar {nextMilestone} días!
+                        </p>
+                    )}
                     <Button
                         className="w-full mt-4 bg-green-600 hover:bg-green-700 text-white shadow-md transition-colors"
                         aria-label="Registrar nuevo reciclaje"

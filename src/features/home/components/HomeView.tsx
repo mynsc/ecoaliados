@@ -22,7 +22,7 @@ export function HomeView({ onNavigateToMissions }: HomeViewProps) {
                     <div className="text-center">
                         <h2 className="text-2xl font-bold text-gray-800">¡Hola, Matias!</h2>
                         <p className="text-md text-gray-600 mt-1">
-                            Hoy reciclaste <span className="font-semibold text-green-600">{todayRecycled} kg</span> de plástico. <span role="img" aria-label="Planeta Tierra">🌍</span>
+                            Tu impacto hoy equivale a <span className="font-semibold text-green-600">{todayRecycled} kg</span> de reciclaje. <span role="img" aria-label="Hoja">🌱</span>
                         </p>
                     </div>
                     <Progress

@@ -1,5 +1,6 @@
 import { useContext } from 'react';
 import { MissionsContext } from './MissionsContext';
+import { ProfileContext } from './ProfileContext';
 
 /**
  * Hook personalizado para acceder al contexto de misiones.
@@ -16,8 +17,25 @@ export function useMissionsContext() {
     return context;
 }
 
+/**
+ * Hook personalizado para acceder al contexto de perfil.
+ * Debe usarse dentro de un ProfileProvider.
+ * 
+ * @throws Error si se usa fuera del ProfileProvider
+ * @returns El contexto de perfil con el estado y función de actualización
+ */
+export function useProfileContext() {
+    const context = useContext(ProfileContext);
+    if (context === undefined) {
+        throw new Error('useProfileContext must be used within a ProfileProvider');
+    }
+    return context;
+}
+
 // Exportar el provider
 export { MissionsProvider } from './MissionsProvider';
+export { ProfileProvider } from './ProfileProvider';
 
 // Exportar tipos si son necesarios
 export type { MissionsContextType } from './MissionsContext';
+export type { ProfileContextType, Profile } from './ProfileContext';

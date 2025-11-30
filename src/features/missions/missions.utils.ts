@@ -195,29 +195,66 @@ export function reportItems(
 
 /**
  * Ordena misiones por prioridad.
- * Criterios (en orden):
- * 1. Misiones activas primero
- * 2. Misiones no completadas primero
- * 3. Mayor progreso porcentual primero (más cercanas a completar)
+ * Criterios:
+ * 1. Misiones completadas al final
+ * 2. Misiones activas primero
+ * 3. Misiones iniciadas primero (currentCount > 0)
+ *    - Entre iniciadas: ordenar por progreso descendente (más avanzadas primero)
+ * 4. Misiones sin iniciar después
+ *    - Entre no iniciadas: ordenar por priority ascendente (menor número primero)
+ * 5. Desempate final por fecha de última actualización (más reciente primero)
  * 
  * @param missions - Array de misiones a ordenar
  * @returns Nuevo array ordenado (no muta el original)
  */
 export function sortMissionsByPriority(missions: Mission[]): Mission[] {
   return [...missions].sort((a, b) => {
-    // 1. Activas primero
-    if (a.active !== b.active) {
-      return a.active ? -1 : 1;
-    }
-
-    // 2. No completadas primero
+    // 1. Completadas al final
     if (a.completed !== b.completed) {
       return a.completed ? 1 : -1;
     }
 
-    // 3. Mayor progreso primero (descendente)
-    const progressA = getProgressPercentage(a);
-    const progressB = getProgressPercentage(b);
-    return progressB - progressA;
+    // 2. Activas primero
+    if (a.active !== b.active) {
+      return a.active ? -1 : 1;
+    }
+
+    // 3. Separar iniciadas de no iniciadas
+    const aStarted = (a.currentCount ?? 0) > 0;
+    const bStarted = (b.currentCount ?? 0) > 0;
+    if (aStarted !== bStarted) {
+      return aStarted ? -1 : 1;
+    }
+
+    // 4. Ambas iniciadas: ordenar por progreso (mayor primero)
+    if (aStarted && bStarted) {
+      const progressA = getProgressPercentage(a);
+      const progressB = getProgressPercentage(b);
+      if (progressA !== progressB) {
+        return progressB - progressA;
+      }
+      // Desempate por priority
+      const priorityA = a.metadata?.priority ?? 999;
+      const priorityB = b.metadata?.priority ?? 999;
+      if (priorityA !== priorityB) {
+        return priorityA - priorityB;
+      }
+      // Desempate final por fecha (más reciente primero)
+      const dateA = new Date(a.lastReportedAt ?? a.updatedAt ?? a.createdAt ?? 0).getTime();
+      const dateB = new Date(b.lastReportedAt ?? b.updatedAt ?? b.createdAt ?? 0).getTime();
+      return dateB - dateA;
+    }
+
+    // 5. Ambas sin iniciar: ordenar por priority (menor primero)
+    const priorityA = a.metadata?.priority ?? 999;
+    const priorityB = b.metadata?.priority ?? 999;
+    if (priorityA !== priorityB) {
+      return priorityA - priorityB;
+    }
+
+    // Desempate final por fecha de creación (más reciente primero)
+    const dateA = new Date(a.updatedAt ?? a.createdAt ?? 0).getTime();
+    const dateB = new Date(b.updatedAt ?? b.createdAt ?? 0).getTime();
+    return dateB - dateA;
   });
 }

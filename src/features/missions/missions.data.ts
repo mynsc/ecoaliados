@@ -10,19 +10,19 @@ export const mockMissions: Mission[] = [
     title: 'Colecciona chapitas para Pandito',
     description: 'Recolecta 10 chapitas para salvar a Pandito.',
     targetCount: 10,
-    currentCount: 4,
+    currentCount: 0,
     reports: [
-      { id: 'r-001', added: 2, timestamp: now, note: 'Inicio' },
-      { id: 'r-002', added: 2, timestamp: now, note: 'Segunda' },
+      { id: 'r-001', added: 2, timestamp: '2025-11-29T15:45:30.123Z', note: 'Inicio' },
+      { id: 'r-002', added: 2, timestamp: '2025-11-29T15:45:30.123Z', note: 'Segunda' },
     ],
     active: true,
     completed: false,
     rewardUnlocked: false,
     createdAt: now,
-    updatedAt: now,
+    updatedAt: '2025-11-28T15:45:30.123Z',
     lastReportedAt: now,
     reward: { id: 'rw-1', type: 'badge', title: 'Pandito Friend', description: 'Sticker exclusivo', value: 0, claimed: false },
-    metadata: { icon: '🧸', unit: 'chapitas', dailyLimit: 5, priority: 1 },
+    metadata: { icon: '🧸', unit: 'chapitas', dailyLimit: 10, priority: 1 },
   },
   {
     id: 'm-002',
@@ -38,7 +38,7 @@ export const mockMissions: Mission[] = [
     createdAt: now,
     updatedAt: now,
     reward: { id: 'rw-2', type: 'points', title: 'Puntos Verde', value: 50, claimed: false },
-    metadata: { icon: '♻️', unit: 'botellas', dailyLimit: 10, priority: 2 },
+    metadata: { icon: '♻️', unit: 'botellas', dailyLimit: 10, priority: 5 },
   },
   {
     id: 'm-003',
@@ -72,7 +72,6 @@ export const mockMissions: Mission[] = [
     reward: { id: 'rw-4', type: 'item', title: 'Sticker ecológico', value: 0, claimed: false },
     metadata: { icon: '🛒️', unit: 'usos', dailyLimit: 3, priority: 4 },
   },
- 
   {
     id: 'm-005',
     type: 'visit',
@@ -81,7 +80,7 @@ export const mockMissions: Mission[] = [
     targetCount: 1,
     currentCount: 0,
     reports: [
-      { id: 'r-100', added: 1, timestamp: now, note: 'Evento inicial' },
+      { id: 'r-100', added: 1, timestamp: '2025-11-28T15:45:30.123Z', note: 'Evento inicial' },
     ],
     active: true,
     completed: false,
@@ -90,7 +89,7 @@ export const mockMissions: Mission[] = [
     updatedAt: now,
     lastReportedAt: now,
     reward: { id: 'rw-5', type: 'badge', title: 'Plantador', description: 'Badge por plantar un árbol', value: 0, claimed: false },
-    metadata: { icon: '🌳', unit: 'árboles', dailyLimit: 1, priority: 5 },
+    metadata: { icon: '🌳', unit: 'árboles', dailyLimit: 1, priority: 1 },
   },
 ];
 

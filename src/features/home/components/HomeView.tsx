@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Card, CardContent, Button, Progress, Badge } from '@/components/ui';
 import { Gift, Award, ChevronDown, ChevronUp } from 'lucide-react';
 import { useHomeData } from '../hooks/useHomeData';
-import { useMissionsContext } from '@/contexts';
+import { useMissionsContext, useProfileContext } from '@/contexts';
 import { sortMissionsByPriority } from '@/features/missions/missions.utils';
 
 interface HomeViewProps {
@@ -12,6 +12,9 @@ interface HomeViewProps {
 export function HomeView({ onNavigateToMissions }: HomeViewProps) {
     const { streak, todayRecycled, streakProgress, nextMilestone } = useHomeData();
     const [isRewardsExpanded, setIsRewardsExpanded] = useState(false);
+    
+    // Obtener perfil del usuario
+    const { profile } = useProfileContext();
     
     // Obtener misiones del contexto y filtrar recompensas desbloqueadas
     const { missions } = useMissionsContext();
@@ -24,10 +27,12 @@ export function HomeView({ onNavigateToMissions }: HomeViewProps) {
             <Card className="shadow-lg transition-all hover:shadow-md">
                 <CardContent className="p-6 flex flex-col items-center space-y-4">
                     <div className="w-24 h-24 rounded-full bg-green-100 flex items-center justify-center border-4 border-green-200">
-                        <span className="text-5xl" role="img" aria-label="Emoji de hoja">🌿</span>
+                        <span className="text-5xl" role="img" aria-label={`Avatar ${profile.avatar}`}>
+                            {profile.avatar}
+                        </span>
                     </div>
                     <div className="text-center">
-                        <h2 className="text-2xl font-bold text-gray-800">¡Hola, Matias!</h2>
+                        <h2 className="text-2xl font-bold text-gray-800">¡Hola, {profile.name}!</h2>
                         <p className="text-md text-gray-600 mt-1">
                             Tu impacto hoy equivale a <span className="font-semibold text-green-600">{todayRecycled} kg</span> de reciclaje. <span role="img" aria-label="Hoja">🌱</span>
                         </p>

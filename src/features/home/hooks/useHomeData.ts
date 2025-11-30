@@ -1,15 +1,17 @@
 import { useMemo } from 'react';
 import { calculateStreak } from '@/features/missions/missions.utils';
-import type { Mission } from '@/features/missions/missions.types';
+import { useMissionsContext } from '@/contexts';
 
 /**
  * Hook personalizado para calcular datos dinámicos del Home.
  * Calcula estadísticas del usuario basadas en el historial de misiones.
+ * Obtiene las misiones directamente del contexto global.
  * 
- * @param missions - Array de todas las misiones del usuario
  * @returns Objeto con datos calculados (racha, kg reciclados hoy, progreso)
  */
-export function useHomeData(missions: Mission[]) {
+export function useHomeData() {
+  // Obtener misiones del contexto global
+  const { missions } = useMissionsContext();
   // Calcular racha de días consecutivos
   const streak = useMemo(() => calculateStreak(missions), [missions]);
 

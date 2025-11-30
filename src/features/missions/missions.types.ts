@@ -55,7 +55,7 @@ export interface Mission {
     unit?: string;          // unidad para los items (ej. 'chapitas', 'botellas', 'árboles', 'visitas')
     dailyLimit?: number;    // máximo por día (opcional)
     priority?: number;
-    [key: string]: any;
+    [key: string]: unknown;
   };
 }
 

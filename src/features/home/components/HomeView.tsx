@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { Card, CardContent, Button, Progress, Badge } from '@/components/ui';
 import { Gift, Award, ChevronDown, ChevronUp } from 'lucide-react';
 import { useHomeData } from '../hooks/useHomeData';
+import { useMissionsContext } from '@/contexts';
+import { sortMissionsByPriority } from '@/features/missions/missions.utils';
 
 interface HomeViewProps {
     onNavigateToMissions: () => void;
@@ -10,6 +12,11 @@ interface HomeViewProps {
 export function HomeView({ onNavigateToMissions }: HomeViewProps) {
     const { streak, todayRecycled, streakProgress, nextMilestone } = useHomeData();
     const [isRewardsExpanded, setIsRewardsExpanded] = useState(false);
+    
+    // Obtener misiones del contexto y filtrar recompensas desbloqueadas
+    const { missions } = useMissionsContext();
+    const sortedMissions = sortMissionsByPriority(missions);
+    const unlockedRewards = sortedMissions.filter(m => m.rewardUnlocked && m.reward);
 
     return (
         <div className="space-y-6">
@@ -55,15 +62,21 @@ export function HomeView({ onNavigateToMissions }: HomeViewProps) {
                         <Gift className="h-6 w-6 text-purple-600" /> Tus Recompensas
                     </h3>
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                        <Badge variant="outline" className="bg-purple-50 text-purple-700 font-semibold text-sm py-2 px-3 flex items-center justify-center">
-                            10% en Bodega
-                        </Badge>
-                        <Badge variant="outline" className="bg-purple-50 text-purple-700 font-semibold text-sm py-2 px-3 flex items-center justify-center">
-                            2x1 en AJE
-                        </Badge>
-                        <Badge variant="outline" className="bg-purple-50 text-purple-700 font-semibold text-sm py-2 px-3 flex items-center justify-center">
-                            Sticker especial
-                        </Badge>
+                        {unlockedRewards
+                            .slice(0, 3)
+                            .map((m) => (
+                                <Badge
+                                    key={m.id}
+                                    variant="outline"
+                                    className={`${m.reward?.claimed
+                                        ? 'bg-gray-50 text-gray-500'
+                                        : 'bg-purple-50 text-purple-700'
+                                        } font-semibold text-sm py-2 px-3 flex items-center justify-center`}
+                                >
+                                    {m.reward?.claimed ? '✓ ' : '🎁 '}
+                                    {m.reward?.title ?? m.title}
+                                </Badge>
+                            ))}
                     </div>
                     
                     {/* Contenido expandible */}

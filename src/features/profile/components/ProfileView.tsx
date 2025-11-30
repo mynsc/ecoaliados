@@ -1,11 +1,20 @@
+import { useState } from 'react';
 import { Card, CardContent, Button } from '@/components/ui';
+import { useProfileContext } from '@/contexts';
 import { useProfileStats } from '../hooks/useProfileStats';
+import { ProfileEditModal } from './ProfileEditModal';
 
 export function ProfileView() {
     const { profile, totalKg, completedMissions, daysSinceJoined, currentStreak } = useProfileStats();
+    const { updateProfile } = useProfileContext();
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
     // Formatear fecha de creación (año)
     const joinYear = new Date(profile.createdAt).getFullYear();
+
+    const handleSave = (name: string, avatar: string) => {
+        updateProfile({ name, avatar });
+    };
 
     return (
         <div className="space-y-6">
@@ -37,12 +46,20 @@ export function ProfileView() {
                             variant="outline"
                             className="w-full mt-4 border-gray-300 hover:bg-gray-50 transition-colors"
                             aria-label="Editar perfil"
+                            onClick={() => setIsEditModalOpen(true)}
                         >
                             Editar perfil
                         </Button>
                     </div>
                 </CardContent>
             </Card>
+
+            <ProfileEditModal
+                profile={profile}
+                open={isEditModalOpen}
+                onOpenChange={setIsEditModalOpen}
+                onSave={handleSave}
+            />
         </div>
     );
 }

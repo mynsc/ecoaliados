@@ -68,8 +68,8 @@ Aplicación de gamificación ecológica que permite a los usuarios (EcoAliados y
 
 Antes de comenzar, asegúrate de tener instalado:
 
-- **Node.js** (versión 18 o superior) - [Descargar aquí](https://nodejs.org/)
-- **npm** o **pnpm** (gestor de paquetes)
+- **Node.js** - [Descargar aquí](https://nodejs.org/)
+- **npm** o **pnpm**
 - **Git** - [Descargar aquí](https://git-scm.com/)
 - **Editor de código** (recomendamos [VS Code](https://code.visualstudio.com/))
 
@@ -103,7 +103,7 @@ pnpm install
 ### 3. Iniciar el servidor de desarrollo
 
 ```bash
-npm run dev
+pnpm dev
 ```
 
 La aplicación estará disponible en `http://localhost:5173`

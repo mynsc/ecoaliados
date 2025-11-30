@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Card, CardContent, Button, Progress, Badge } from '@/components/ui';
-import { Star, Award, ChevronDown, ChevronUp } from 'lucide-react';
+import { Star, Gift, ChevronDown, ChevronUp } from 'lucide-react';
 import { useMissions } from './hooks/useMissions';
 import { MissionCard } from './components/MissionCard';
 import { MissionReportModal } from './components/MissionReportModal';
@@ -73,7 +73,7 @@ export default function Missions() {
       <Card className="shadow-lg transition-all hover:shadow-md">
         <CardContent className="p-6 space-y-4">
           <h3 className="text-xl font-bold text-gray-800 flex items-center gap-2">
-            <Award className="h-6 w-6 text-purple-600" /> Tus Recompensas
+            <Gift className="h-6 w-6 text-purple-600" /> Tus Recompensas
           </h3>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
             {sortedMissions

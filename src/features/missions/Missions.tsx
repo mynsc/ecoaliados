@@ -25,7 +25,7 @@ export default function Missions() {
 
   const handleDevComplete = (m: Mission) => {
     const manual: Mission = { ...m, currentCount: m.targetCount, completed: true, active: false, updatedAt: new Date().toISOString() };
-    setMissions(ms => ms.map(x => x.id === m.id ? manual : x));
+    setMissions(sortedMissions.map(x => x.id === m.id ? manual : x));
   };
 
   return (

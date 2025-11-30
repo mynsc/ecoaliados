@@ -23,11 +23,10 @@ export function useHomeData(missions: Mission[]) {
     );
 
     // Sumar items reportados hoy
-    const totalItems = todayReports.reduce((sum, r) => sum + r.added, 0);
+    const totalItemsToday = todayReports.reduce((sum, r) => sum + r.added, 0);
 
     // Convertir a kilogramos (asumiendo ~150g por item promedio)
-    // Puedes ajustar este factor según el tipo de items
-    return (totalItems * 0.15).toFixed(1);
+    return (totalItemsToday * 0.15).toFixed(1);
   }, [missions]);
 
   // Calcular progreso hacia el próximo hito de racha

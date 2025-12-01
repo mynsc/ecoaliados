@@ -9,14 +9,14 @@ export function useMissions() {
     
     // Estado local para la UI del modal y animaciones
     const [selectedMissionId, setSelectedMissionId] = useState<string | null>(null);
-    const [inputCount, setInputCount] = useState<number>(1);
+    const [inputCount, setInputCount] = useState<string>("");
     const [note, setNote] = useState<string>('');
     const [error, setError] = useState<string | null>(null);
     const [justCompleted, setJustCompleted] = useState<Set<string>>(new Set());
 
     const openReport = (id: string) => {
         setError(null);
-        setInputCount(1);
+        setInputCount("");
         setNote('');
         setSelectedMissionId(id);
     };
@@ -29,7 +29,7 @@ export function useMissions() {
         const { result, missions: updatedMissions } = reportItems(
             missions,
             selectedMissionId,
-            inputCount,
+            Number(inputCount),
             note,
             new Date()
         );

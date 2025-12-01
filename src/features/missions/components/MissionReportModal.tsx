@@ -5,8 +5,8 @@ import type { Mission } from '../missions.types';
 
 interface MissionReportModalProps {
     mission: Mission;
-    inputCount: number;
-    setInputCount: (count: number) => void;
+    inputCount: string;
+    setInputCount: (count: string) => void;
     note: string;
     setNote: (note: string) => void;
     error: string | null;
@@ -32,7 +32,7 @@ export function MissionReportModal({
     const dailyLimit = mission.metadata?.dailyLimit ?? Infinity;
     const dailyRemaining = dailyLimit === Infinity ? Infinity : Math.max(0, dailyLimit - todaySum);
     const maxAllowed = Math.min(remaining, dailyRemaining);
-    const isValid = inputCount > 0 && inputCount <= maxAllowed;
+    const isValid = inputCount !== "" && !isNaN(Number(inputCount)) && Number(inputCount) > 0 && Number(inputCount) <= maxAllowed;
 
     // Auto-focus en el input de cantidad al abrir el modal
     useEffect(() => {
@@ -96,7 +96,8 @@ export function MissionReportModal({
                         min={1}
                         max={maxAllowed}
                         value={inputCount}
-                        onChange={(e) => setInputCount(Number(e.target.value))}
+                        onChange={(e) => setInputCount(e.target.value)}
+                        placeholder="Ingresa cantidad"
                         className="w-full border rounded px-2 py-1"
                     />
                     <label className="block text-sm">Nota (opcional)</label>

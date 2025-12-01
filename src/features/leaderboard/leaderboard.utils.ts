@@ -16,9 +16,9 @@ export interface LeaderboardEntry {
  * Nombres aleatorios para NPCs.
  */
 const NPC_NAMES = [
-    'Ana M.', 'Carlos R.', 'Diana P.', 'Eduardo S.', 'Fernanda L.',
+    'Danna K.', 'Carlos R.', 'Diana P.', 'Eduardo S.', 'Fernanda L.',
     'Gabriel T.', 'Helena V.', 'Ignacio B.', 'Juliana C.', 'Kevin D.',
-    'Laura F.', 'Miguel A.', 'Natalia G.', 'Oscar H.', 'Patricia I.',
+    'Laura F.', 'Miguel A.', 'Natalia G.', 'Oscar H.', 'Basilio S.',
     'Ricardo J.', 'Sofia K.', 'Tomás N.', 'Valentina O.', 'William Q.'
 ];
 
